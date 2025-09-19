@@ -50,6 +50,9 @@ async def main():
     def set_ws_kick_live(ws) -> None:
         g.websocket_kick_live = ws
 
+    def is_enable_service(name: str) -> bool:
+        return name in ["kick", "twicas"]
+
     async def recv_kick_live_response(message: str) -> None:
         try:
             json_data = json.loads(message)
@@ -58,7 +61,7 @@ async def main():
 
             data = json_data["data"]
             for comment in data["comments"]:
-                if comment["service"] != "kick":
+                if not is_enable_service(comment["service"]):
                     continue
 
                 logger.info(comment)
